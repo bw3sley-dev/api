@@ -1,0 +1,256 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id                            String   @id @default(uuid())
+  name                          String
+  slug                          String
+  domain                        String
+  should_attach_users_by_domain Boolean  @default(false)
+  default_password              String
+  status                        Boolean  @default(true)
+  created_at                    DateTime @default(now())
+
+  address_id Int?
+  address    Address? @relation(fields: [address_id], references: [id])
+
+  users User[] @relation("OrganizationUsers")
+
+  owner_id String?
+  owner    User?   @relation(fields: [owner_id], references: [id])
+
+  @@map("organizations")
+}
+
+enum Role {
+  ADMINISTRATOR
+  VOLUNTEER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Area {
+  UNSPECIFIED
+  PSYCHOLOGY
+  PHYSIOTHERAPY
+  NUTRITION
+  NURSING
+  PSYCHOPEDAGOGY
+  PHYSICAL_EDUCATION
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password_hash String
+  status        Boolean   @default(true)
+  birth_date    DateTime?
+  gender        Gender?
+  cpf           String?   @unique
+  phone         String?
+  role          Role      @default(VOLUNTEER)
+  created_at    DateTime  @default(now())
+  area          Area      @default(UNSPECIFIED)
+
+  organization_id String
+  organization    Organization @relation(fields: [organization_id], references: [id], name: "OrganizationUsers")
+
+  address_id Int?
+  address    Address? @relation(fields: [address_id], references: [id])
+
+  observations        Observation[]
+  athleteAssociations UserAthleteAssociation[]
+  organizations       Organization[]
+
+  @@map("users")
+}
+
+model UserAthleteAssociation {
+  id         String @id @default(uuid())
+  user_id    String
+  athlete_id String
+
+  user    User    @relation(fields: [user_id], references: [id])
+  athlete Athlete @relation(fields: [athlete_id], references: [id])
+
+  @@map("user_athlete_associations")
+}
+
+model Address {
+  id           Int     @id @default(autoincrement())
+  street       String?
+  neighborhood String?
+  zipcode      String?
+  state        String?
+  complement   String?
+  number       String?
+  city         String?
+  uf           String?
+  country      String?
+
+  users        User[]
+  athletes     Athlete[]
+  guardians    Guardian[]
+  organization Organization[]
+
+  @@map("addresses")
+}
+
+enum BloodType {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+enum Handedness {
+  RIGHT
+  LEFT
+}
+
+model Athlete {
+  id         String      @id @default(uuid())
+  name       String
+  birth_date DateTime?
+  status     Boolean     @default(true)
+  blood_type BloodType?
+  gender     Gender?
+  handedness Handedness?
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+
+  guardian_id String?
+  guardian    Guardian? @relation(fields: [guardian_id], references: [id])
+
+  address_id Int?
+  address    Address? @relation(fields: [address_id], references: [id])
+
+  anamnesis           Anamnesis[]
+  consents            Consent[]
+  observations        Observation[]
+  athleteAssociations UserAthleteAssociation[]
+
+  @@map("athletes")
+}
+
+model Guardian {
+  id                  String   @id @default(uuid())
+  name                String?
+  email               String?  @unique
+  password_hash       String?
+  relationship_degree String?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  address_id Int?
+  address    Address? @relation(fields: [address_id], references: [id])
+
+  athletes Athlete[]
+
+  @@map("guardians")
+}
+
+model Observation {
+  id         Int      @id @default(autoincrement())
+  text       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  athlete_id String
+  athlete    Athlete @relation(fields: [athlete_id], references: [id])
+
+  @@map("observations")
+}
+
+model Anamnesis {
+  id         String   @id @default(uuid())
+  public_id  String   @unique @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  athlete_id String
+  athlete    Athlete @relation(fields: [athlete_id], references: [id])
+
+  sections Section[]
+
+  @@map("anamnesis")
+}
+
+model Section {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+
+  anamnesis_id String
+  anamnesis    Anamnesis @relation(fields: [anamnesis_id], references: [id])
+
+  questions Question[]
+
+  @@map("sections")
+}
+
+model Question {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+
+  question_type_id Int
+  questionType     QuestionType @relation(fields: [question_type_id], references: [id])
+
+  section_id Int
+  section    Section @relation(fields: [section_id], references: [id])
+
+  answers Answer[]
+
+  @@map("questions")
+}
+
+model QuestionType {
+  id   Int    @id @default(autoincrement())
+  type String
+
+  questions Question[]
+
+  @@map("question_types")
+}
+
+model Answer {
+  id          Int     @id @default(autoincrement())
+  value       String
+  observation String?
+
+  question_id Int
+  question    Question @relation(fields: [question_id], references: [id])
+
+  @@map("answers")
+}
+
+model Consent {
+  id         Int      @id @default(autoincrement())
+  type       String
+  is_agreed  Boolean  @default(false)
+  agreed_at  DateTime
+  created_at DateTime @default(now())
+
+  athlete_id String
+  athlete    Athlete @relation(fields: [athlete_id], references: [id])
+
+  @@map("consents")
+}
