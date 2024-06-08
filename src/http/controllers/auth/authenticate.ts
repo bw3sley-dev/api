@@ -49,6 +49,7 @@ export async function authenticate(
         area: user.area,
       },
     },
+
     {
       expiresIn: '7d',
     },
@@ -57,10 +58,12 @@ export async function authenticate(
   return reply
     .setCookie('auth', token, {
       path: '/',
-      secure: env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'dev',
       httpOnly: true,
-      sameSite: true,
+      sameSite: 'none',
       maxAge: 3600 * 24 * 7, // 7 dias
     })
-    .send()
+    .send({
+      token,
+    })
 }
