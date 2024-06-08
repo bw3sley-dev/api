@@ -166,7 +166,7 @@ model Guardian {
 
 model Observation {
   id         Int      @id @default(autoincrement())
-  text       String
+  text       String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -242,12 +242,17 @@ model Answer {
   @@map("answers")
 }
 
+enum ConsentType {
+  IMAGE
+  RESPONSIBILITY
+}
+
 model Consent {
-  id         Int      @id @default(autoincrement())
-  type       String
-  is_agreed  Boolean  @default(false)
-  agreed_at  DateTime
-  created_at DateTime @default(now())
+  id         Int         @id @default(autoincrement())
+  type       ConsentType
+  is_agreed  Boolean     @default(false)
+  agreed_at  DateTime    @updatedAt
+  created_at DateTime    @default(now())
 
   athlete_id String
   athlete    Athlete @relation(fields: [athlete_id], references: [id])

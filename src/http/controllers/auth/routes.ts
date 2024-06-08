@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 
-import { logout } from './logout'
+import { logout } from './sign-out'
 import { forgot } from './forgot-password'
 import { authenticate } from './authenticate'
 import { verifyAuthentication } from './verify-authentication'
@@ -8,7 +8,7 @@ import { verifyAuthentication } from './verify-authentication'
 export async function authRoutes(app: FastifyInstance) {
   app.post('/sessions', authenticate)
 
-  app.post('/logout', logout)
+  app.post('/sign-out', logout)
 
   app.get('/verify-auth', verifyAuthentication)
 

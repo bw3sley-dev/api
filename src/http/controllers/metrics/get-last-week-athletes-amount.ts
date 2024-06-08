@@ -40,7 +40,5 @@ export async function getAthletesLastWeekAmount(
     return { date, count }
   })
 
-  return reply.send({
-    amount: amount ?? 0,
-  })
+  return reply.send(amount)
 }

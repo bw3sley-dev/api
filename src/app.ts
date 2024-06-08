@@ -12,12 +12,20 @@ import fastifyCookie from '@fastify/cookie'
 
 import { authRoutes } from './http/controllers/auth/routes'
 import { metricsRoutes } from './http/controllers/metrics/routes'
+import { userRoutes } from './http/controllers/users/routes'
+import { orgRoutes } from './http/controllers/orgs/routes'
+import { athleteRoutes } from './http/controllers/athletes/routes'
 
 export const app = fastify()
 
 app.register(fastifyCors, {
-  origin: 'http://localhost:5173',
   credentials: true,
+  allowedHeaders: ['content-type'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+
+  origin: (_, callback) => {
+    callback(null, true)
+  },
 })
 
 app.register(fastifyJwt, {
@@ -32,6 +40,9 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie)
 
 app.register(authRoutes)
+app.register(orgRoutes)
+app.register(userRoutes)
+app.register(athleteRoutes)
 app.register(metricsRoutes)
 
 app.setErrorHandler((error, _, reply) => {

@@ -38,12 +38,12 @@ export async function getAthletesByGenderAmount(
 
   return reply.send([
     {
-      gender: 'MALE',
+      gender: 'male',
       amount: totalMale ?? 0,
     },
 
     {
-      gender: 'FEMALE',
+      gender: 'female',
       amount: totalFemale ?? 0,
     },
   ])
