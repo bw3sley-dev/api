@@ -24,6 +24,7 @@ export async function updateEmail(
     where: {
       email,
       organization_id: orgId,
+
       id: {
         not: userId,
       },

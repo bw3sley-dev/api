@@ -10,11 +10,12 @@ import { fastifyJwt } from '@fastify/jwt'
 
 import fastifyCookie from '@fastify/cookie'
 
-import { authRoutes } from './http/controllers/auth/routes'
 import { metricsRoutes } from './http/controllers/metrics/routes'
-import { userRoutes } from './http/controllers/users/routes'
+import { authRoutes } from './http/controllers/auth/routes'
 import { orgRoutes } from './http/controllers/orgs/routes'
+import { userRoutes } from './http/controllers/users/routes'
 import { athleteRoutes } from './http/controllers/athletes/routes'
+import { volunteerRoutes } from './http/controllers/volunteers/routes'
 
 export const app = fastify()
 
@@ -42,6 +43,7 @@ app.register(fastifyCookie)
 app.register(authRoutes)
 app.register(orgRoutes)
 app.register(userRoutes)
+app.register(volunteerRoutes)
 app.register(athleteRoutes)
 app.register(metricsRoutes)
 

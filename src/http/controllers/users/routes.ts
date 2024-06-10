@@ -6,6 +6,8 @@ import { profile } from './profile'
 import { updateEmail } from './update-email'
 import { updatePassword } from './update-password'
 
+import { deleteUser } from './delete'
+
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 
 export async function userRoutes(app: FastifyInstance) {
@@ -15,4 +17,5 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.patch('/update-email', { onRequest: [verifyJWT] }, updateEmail)
   app.patch('/update-password', { onRequest: [verifyJWT] }, updatePassword)
+  app.patch('/update-status', { onRequest: [verifyJWT] }, deleteUser)
 }
