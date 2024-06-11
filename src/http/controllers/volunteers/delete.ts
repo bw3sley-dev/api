@@ -11,20 +11,14 @@ export async function deleteVolunteer(
   const orgId = request.user.meta.orgId
 
   const updateStatusParamsSchema = z.object({
-    userId: z.string().uuid(),
+    id: z.string().uuid(),
   })
 
-  const { userId } = updateStatusParamsSchema.parse(request.params)
-
-  const updateStatusBodySchema = z.object({
-    status: z.boolean(),
-  })
-
-  const { status } = updateStatusBodySchema.parse(request.body)
+  const { id } = updateStatusParamsSchema.parse(request.params)
 
   const user = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id,
       organization_id: orgId,
     },
   })
@@ -43,12 +37,12 @@ export async function deleteVolunteer(
 
   await prisma.user.update({
     where: {
-      id: userId,
+      id,
       organization_id: orgId,
     },
 
     data: {
-      status,
+      status: false,
     },
   })
 

@@ -8,22 +8,20 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
   const orgId = request.user.meta.orgId
 
   const updateAddressBodySchema = z.object({
-    street: z.string(),
-    neighborhood: z.string(),
-    zipcode: z.string(),
-    state: z.string(),
-    complement: z.string(),
-    number: z.string(),
-    city: z.string(),
-    uf: z.string(),
-    country: z.string(),
+    street: z.string().optional(),
+    neighborhood: z.string().optional(),
+    zipcode: z.string().optional(),
+    complement: z.string().optional(),
+    number: z.string().optional(),
+    city: z.string().optional(),
+    uf: z.string().optional(),
+    country: z.string().optional(),
   })
 
   const {
     street,
     neighborhood,
     zipcode,
-    state,
     complement,
     number,
     city,
@@ -53,7 +51,6 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
         street,
         neighborhood,
         zipcode,
-        state,
         complement,
         number,
         city,
@@ -77,11 +74,11 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   await prisma.address.update({
     where: { id: organization.address_id },
+
     data: {
       street,
       neighborhood,
       zipcode,
-      state,
       complement,
       number,
       city,

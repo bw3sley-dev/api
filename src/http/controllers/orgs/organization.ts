@@ -15,6 +15,12 @@ export async function organization(
 
     include: {
       address: true,
+
+      owner: {
+        select: {
+          name: true,
+        },
+      },
     },
   })
 

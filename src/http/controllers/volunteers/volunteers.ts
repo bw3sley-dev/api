@@ -2,6 +2,8 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 
 import { prisma } from '@/lib/prisma'
 
+import dayjs from 'dayjs'
+
 export async function volunteers(request: FastifyRequest, reply: FastifyReply) {
   const orgId = request.user.meta.orgId
 
@@ -9,6 +11,7 @@ export async function volunteers(request: FastifyRequest, reply: FastifyReply) {
     where: {
       organization_id: orgId,
       role: 'VOLUNTEER',
+      status: true,
     },
 
     select: {
@@ -18,8 +21,18 @@ export async function volunteers(request: FastifyRequest, reply: FastifyReply) {
       phone: true,
       area: true,
       status: true,
+      created_at: true,
     },
   })
 
-  return reply.send(volunteers)
+  const _volunteers = volunteers.map((volunteer) => ({
+    ...volunteer,
+
+    area: volunteer.area.toLocaleLowerCase(),
+    access_date: dayjs(volunteer.created_at).format('YYYY-MM-DD HH:mm:ss'),
+  }))
+
+  return reply.send({
+    volunteers: _volunteers,
+  })
 }

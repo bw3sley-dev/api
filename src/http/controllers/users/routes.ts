@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify'
 
 import { register } from './register'
 import { profile } from './profile'
+import { update } from './update'
 
 import { updateEmail } from './update-email'
 import { updatePassword } from './update-password'
@@ -18,4 +19,6 @@ export async function userRoutes(app: FastifyInstance) {
   app.patch('/update-email', { onRequest: [verifyJWT] }, updateEmail)
   app.patch('/update-password', { onRequest: [verifyJWT] }, updatePassword)
   app.patch('/update-status', { onRequest: [verifyJWT] }, deleteUser)
+
+  app.patch('/me', { onRequest: [verifyJWT] }, update)
 }
