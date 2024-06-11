@@ -6,8 +6,10 @@ import { hash } from 'bcryptjs'
 
 import { z } from 'zod'
 
-export async function register(request: FastifyRequest, reply: FastifyReply) {
-  const registerBodySchema = z.object({
+export async function create(request: FastifyRequest, reply: FastifyReply) {
+  const orgId = request.user.meta.orgId
+
+  const createBodySchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string().min(6).optional(),
@@ -23,12 +25,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
         'PHYSICAL_EDUCATION',
       ])
       .default('UNSPECIFIED'),
-    role: z.enum(['ADMINISTRATOR', 'VOLUNTEER']).default('VOLUNTEER'),
-    orgId: z.string().uuid(),
+    role: z.enum(['VOLUNTEER']).default('VOLUNTEER'),
   })
 
-  const { name, email, area, role, phone, password, orgId } =
-    registerBodySchema.parse(request.body)
+  const { name, email, area, role, phone, password } = createBodySchema.parse(
+    request.body,
+  )
 
   let hashedPassword
 
@@ -56,7 +58,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     }
   }
 
-  const doesUserExist = await prisma.user.findFirst({
+  const doesVolunteerExist = await prisma.user.findFirst({
     where: {
       AND: [
         {
@@ -70,9 +72,17 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     },
   })
 
-  if (doesUserExist) {
+  if (doesVolunteerExist) {
     return reply.status(409).send({
       message: 'Usuário já criado.',
+    })
+  }
+
+  const isUserAnAdministrator = request.user.role === 'ADMINISTRATOR'
+
+  if (!isUserAnAdministrator) {
+    return reply.status(401).send({
+      message: 'Você não tem permissão para cadastrar um voluntário.',
     })
   }
 
@@ -89,7 +99,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       phone,
       area,
 
-      organization_id: orgId!,
+      organization_id: orgId,
 
       address_id: addressId,
     },

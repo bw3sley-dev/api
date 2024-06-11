@@ -3,6 +3,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { prisma } from '@/lib/prisma'
 
 import { transformNameToInitials } from '@/utils/transform-name-to-initials'
+
 import dayjs from 'dayjs'
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
@@ -21,8 +22,8 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
   })
 
   if (!user) {
-    return reply.status(404).send({
-      message: 'Usuário não encontrado.',
+    return reply.status(403).send({
+      message: 'Usuário não possui acesso.',
     })
   }
 

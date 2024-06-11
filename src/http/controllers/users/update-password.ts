@@ -34,8 +34,8 @@ export async function updatePassword(
   })
 
   if (!user) {
-    return reply.status(404).send({
-      message: 'Usuário não encontrado.',
+    return reply.status(403).send({
+      message: 'Usuário não possui permissão.',
     })
   }
 
