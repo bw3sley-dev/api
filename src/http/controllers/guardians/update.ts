@@ -1,20 +1,23 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 
 import { z } from 'zod'
 
 import { prisma } from '@/lib/prisma'
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
-  const userId = request.user.sub
-  const orgId = request.user.meta.orgId
+  const updateGuardianParamsSchema = z.object({
+    guardianId: z.string().uuid(),
+  })
 
-  const updateSchema = z.object({
-    name: z.string(),
-    cpf: z.string(),
+  const { guardianId } = updateGuardianParamsSchema.parse(request.params)
+
+  const updateGuardianBodySchema = z.object({
+    name: z.string().optional(),
     gender: z.enum(['MALE', 'FEMALE']).optional(),
-    birthDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
-      message: 'Formato da data inválido',
-    }),
+    email: z.string().email().optional(),
+    cpf: z.string().optional(),
+    rg: z.string().optional(),
+    relationshipDegree: z.string().optional(),
     address: z
       .object({
         street: z.string().optional(),
@@ -23,47 +26,46 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
         zipcode: z.string().optional(),
         complement: z.string().optional(),
         neighborhood: z.string().optional(),
-        number: z.string(),
+        number: z.string().optional(),
         country: z.string().default('BRASIL').optional(),
       })
       .optional(),
   })
 
-  const { name, cpf, gender, birthDate, address } = updateSchema.parse(
-    request.body,
-  )
+  const { name, gender, email, cpf, rg, relationshipDegree, address } =
+    updateGuardianBodySchema.parse(request.body)
 
-  const user = await prisma.user.findUnique({
+  const guardian = await prisma.guardian.findUnique({
     where: {
-      id: userId,
-      organization_id: orgId,
+      id: guardianId,
     },
   })
 
-  if (!user) {
-    return reply.status(403).send({
-      message: 'Usuário não possui permissão.',
+  if (!guardian) {
+    return reply.status(404).send({
+      message: 'Responsável não encontrado.',
     })
   }
 
-  await prisma.user.update({
+  await prisma.guardian.update({
     where: {
-      id: userId,
-      organization_id: orgId,
+      id: guardianId,
     },
 
     data: {
       name,
-      cpf,
       gender,
-      birth_date: birthDate && new Date(birthDate),
+      email,
+      cpf,
+      rg,
+      relationship_degree: relationshipDegree,
     },
   })
 
   if (address) {
-    if (user.address_id) {
+    if (guardian.id) {
       await prisma.address.update({
-        where: { id: user.address_id },
+        where: { id: guardian.address_id! },
 
         data: {
           street: address.street,
@@ -95,7 +97,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     await prisma.user.update({
       where: {
-        id: userId,
+        id: guardianId,
       },
 
       data: {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 import { prisma } from '@/lib/prisma'
@@ -32,8 +33,15 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
     })
   }
 
+  const {
+    address_id: _,
+    guardian_id: __,
+
+    ..._athlete
+  } = athlete
+
   return reply.send({
-    ...athlete,
+    ..._athlete,
 
     initials: transformNameToInitials(athlete.name),
   })

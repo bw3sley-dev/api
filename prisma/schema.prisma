@@ -226,23 +226,23 @@ model Question {
   id          Int     @id @default(autoincrement())
   title       String
   description String?
+  observation String?
 
   question_type QuestionType
 
   section_id Int
   section    Section @relation(fields: [section_id], references: [id])
 
-  answers Answer[]
+  answers Answer?
 
   @@map("questions")
 }
 
 model Answer {
-  id          Int     @id @default(autoincrement())
-  value       String
-  observation String?
+  id    Int    @id @default(autoincrement())
+  value String
 
-  question_id Int
+  question_id Int @unique
   question    Question @relation(fields: [question_id], references: [id])
 
   @@map("answers")
