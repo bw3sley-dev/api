@@ -6,10 +6,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
   const updateGuardianParamsSchema = z.object({
-    guardianId: z.string().uuid(),
+    id: z.string().uuid(),
   })
 
-  const { guardianId } = updateGuardianParamsSchema.parse(request.params)
+  const { id } = updateGuardianParamsSchema.parse(request.params)
 
   const updateGuardianBodySchema = z.object({
     name: z.string().optional(),
@@ -37,7 +37,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   const guardian = await prisma.guardian.findUnique({
     where: {
-      id: guardianId,
+      id,
     },
   })
 
@@ -49,7 +49,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   await prisma.guardian.update({
     where: {
-      id: guardianId,
+      id,
     },
 
     data: {
@@ -97,7 +97,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     await prisma.user.update({
       where: {
-        id: guardianId,
+        id,
       },
 
       data: {

@@ -6,14 +6,14 @@ import { z } from 'zod'
 
 export async function anamnesis(request: FastifyRequest, reply: FastifyReply) {
   const anamnesisParamsSchema = z.object({
-    anamnesisId: z.string().uuid(),
+    id: z.string().uuid(),
   })
 
-  const { anamnesisId } = anamnesisParamsSchema.parse(request.params)
+  const { id } = anamnesisParamsSchema.parse(request.params)
 
   const anamnesis = await prisma.anamnesis.findUnique({
     where: {
-      id: anamnesisId,
+      id,
     },
 
     include: {
@@ -26,6 +26,8 @@ export async function anamnesis(request: FastifyRequest, reply: FastifyReply) {
           },
         },
       },
+
+      athlete: true,
     },
   })
 

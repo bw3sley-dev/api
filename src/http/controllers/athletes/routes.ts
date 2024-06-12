@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify'
 import { search } from './search'
 import { create } from './create'
 import { profile } from './profile'
+import { update } from './update'
 
 import { updateStatus } from './update-status'
 
@@ -17,4 +18,6 @@ export async function athleteRoutes(app: FastifyInstance) {
   app.post('/athletes', create)
 
   app.patch('/athletes/:id/status', updateStatus)
+
+  app.patch('/athletes/:id', update)
 }

@@ -138,10 +138,11 @@ model Athlete {
   address_id Int?
   address    Address? @relation(fields: [address_id], references: [id])
 
-  anamnesis           Anamnesis[]
   consents            Consent[]
   observations        Observation[]
   athleteAssociations UserAthleteAssociation[]
+
+  anamnesis Anamnesis?
 
   @@map("athletes")
 }
@@ -183,11 +184,10 @@ model Observation {
 
 model Anamnesis {
   id         String   @id @default(uuid())
-  public_id  String   @unique @default(uuid())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  athlete_id String
+  athlete_id String  @unique
   athlete    Athlete @relation(fields: [athlete_id], references: [id])
 
   sections Section[]
@@ -242,7 +242,7 @@ model Answer {
   id    Int    @id @default(autoincrement())
   value String
 
-  question_id Int @unique
+  question_id Int      @unique
   question    Question @relation(fields: [question_id], references: [id])
 
   @@map("answers")
