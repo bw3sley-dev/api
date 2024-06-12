@@ -1,5 +1,6 @@
-import { prisma } from '@/lib/prisma'
 import type { FastifyReply, FastifyRequest } from 'fastify'
+
+import { prisma } from '@/lib/prisma'
 
 import { z } from 'zod'
 

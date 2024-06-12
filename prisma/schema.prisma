@@ -149,7 +149,10 @@ model Athlete {
 model Guardian {
   id                  String   @id @default(uuid())
   name                String?
+  gender              Gender
   email               String?  @unique
+  cpf                 String?  @unique
+  rg                  String?  @unique
   password_hash       String?
   relationship_degree String?
   created_at          DateTime @default(now())
