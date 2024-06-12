@@ -7,8 +7,8 @@ import { prisma } from '@/lib/prisma'
 export async function update(request: FastifyRequest, reply: FastifyReply) {
   const updateAnswerParamsSchema = z.object({
     id: z.string().uuid(),
-    sectionId: z.number(),
-    questionId: z.number(),
+    sectionId: z.string(),
+    questionId: z.string(),
   })
 
   const { id, sectionId, questionId } = updateAnswerParamsSchema.parse(
@@ -24,10 +24,10 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   const question = await prisma.question.findFirst({
     where: {
-      id: questionId,
+      id: Number(questionId),
 
       section: {
-        id: sectionId,
+        id: Number(sectionId),
         anamnesis_id: id,
       },
     },
@@ -45,7 +45,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   await prisma.question.update({
     where: {
-      id: questionId,
+      id: Number(questionId),
     },
 
     data: {
@@ -55,11 +55,11 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   await prisma.answer.update({
     where: {
-      question_id: questionId,
+      question_id: Number(questionId),
     },
 
     data: {
-      value: value ?? question.answers?.value,
+      value: value || question.answers?.value,
     },
   })
 

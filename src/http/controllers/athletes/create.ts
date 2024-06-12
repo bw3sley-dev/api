@@ -100,12 +100,24 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
                   title:
                     'Descreva como é a rotina atual do atleta (descrever um dia típico do começo ao fim, com as atividades de rotina em casa, outras atividades, retorno a casa, atividades realizadas em casa, período de sono, aulas ou curso realizados, etc)',
                   question_type: 'ESSAY',
+
+                  answers: {
+                    create: {
+                      value: '',
+                    },
+                  },
                 },
 
                 {
                   title:
                     'Descreva como está a vida do atleta no presente momento:',
                   question_type: 'ESSAY',
+
+                  answers: {
+                    create: {
+                      value: '',
+                    },
+                  },
                 },
               ],
             },
