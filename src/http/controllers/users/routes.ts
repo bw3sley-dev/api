@@ -20,5 +20,5 @@ export async function userRoutes(app: FastifyInstance) {
   app.patch('/update-password', { onRequest: [verifyJWT] }, updatePassword)
   app.patch('/update-status', { onRequest: [verifyJWT] }, deleteUser)
 
-  app.patch('/me', { onRequest: [verifyJWT] }, update)
+  app.put('/me', { onRequest: [verifyJWT] }, update)
 }

@@ -7,11 +7,13 @@ import { z } from 'zod'
 export async function update(request: FastifyRequest, reply: FastifyReply) {
   const orgId = request.user.meta.orgId
 
+  console.log(request.params)
+
   const updateVolunteerParamsSchema = z.object({
-    userId: z.string().uuid(),
+    id: z.string().uuid(),
   })
 
-  const { userId } = updateVolunteerParamsSchema.parse(request.params)
+  const { id } = updateVolunteerParamsSchema.parse(request.params)
 
   const updateVolunteerBodySchema = z.object({
     name: z.string(),
@@ -30,7 +32,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   const user = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id,
       organization_id: orgId,
       role: 'VOLUNTEER',
     },
@@ -44,7 +46,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
   await prisma.user.update({
     where: {
-      id: userId,
+      id,
       organization_id: orgId,
     },
 

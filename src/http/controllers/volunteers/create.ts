@@ -68,6 +68,10 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         {
           organization_id: orgId,
         },
+
+        {
+          status: true,
+        },
       ],
     },
   })

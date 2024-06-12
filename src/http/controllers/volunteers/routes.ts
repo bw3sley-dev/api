@@ -16,5 +16,5 @@ export async function volunteerRoutes(app: FastifyInstance) {
 
   app.put('/volunteers/:id', update)
 
-  app.patch('/volunteers/:id', deleteVolunteer)
+  app.delete('/volunteers/:id', deleteVolunteer)
 }

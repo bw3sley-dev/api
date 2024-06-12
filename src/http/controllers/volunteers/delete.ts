@@ -35,14 +35,10 @@ export async function deleteVolunteer(
     })
   }
 
-  await prisma.user.update({
+  await prisma.user.delete({
     where: {
       id,
       organization_id: orgId,
-    },
-
-    data: {
-      status: false,
     },
   })
 

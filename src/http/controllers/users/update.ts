@@ -12,13 +12,9 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     name: z.string(),
     cpf: z.string(),
     gender: z.enum(['MALE', 'FEMALE']).optional(),
-    birthDate: z
-      .string()
-      .refine((date) => !isNaN(Date.parse(date)), {
-        message: 'Formato da data inválido',
-      })
-      .optional(),
-
+    birthDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
+      message: 'Formato da data inválido',
+    }),
     address: z
       .object({
         street: z.string().optional(),

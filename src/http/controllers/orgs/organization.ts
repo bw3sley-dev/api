@@ -25,8 +25,9 @@ export async function organization(
   })
 
   if (!organization) {
-    return reply.status(404).send({
-      message: 'Organização não encontrada.',
+    return reply.status(403).send({
+      message: 'Você não possui acesso.',
+      code: 'FORBIDDEN',
     })
   }
 

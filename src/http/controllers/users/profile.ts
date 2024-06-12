@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 import { prisma } from '@/lib/prisma'
@@ -24,18 +26,23 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
   if (!user) {
     return reply.status(403).send({
       message: 'Usuário não possui acesso.',
+      code: 'FORBIDDEN',
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { address_id: _, ..._user } = user
+  const {
+    address_id: _,
+    password_hash: __,
+    status: ___,
+
+    birth_date,
+    ..._user
+  } = user
 
   return reply.send({
     ..._user,
 
-    birth_date: _user.birth_date
-      ? dayjs(_user.birth_date).format('YYYY-MM-DD')
-      : null,
+    birthDate: birth_date ? dayjs(birth_date).format('YYYY-MM-DD') : null,
 
     initials: transformNameToInitials(user.name),
   })

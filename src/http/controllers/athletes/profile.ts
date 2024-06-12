@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 
 import { z } from 'zod'
 
+import { transformNameToInitials } from '@/utils/transform-name-to-initials'
+
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
   const profileParamsSchema = z.object({
     id: z.string().uuid(),
@@ -30,5 +32,9 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
     })
   }
 
-  return reply.send(athlete)
+  return reply.send({
+    ...athlete,
+
+    initials: transformNameToInitials(athlete.name),
+  })
 }

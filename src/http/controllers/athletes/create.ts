@@ -40,7 +40,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     guardianEmail,
   } = createBodySchema.parse(request.body)
 
-  await prisma.athlete.create({
+  const athlete = await prisma.athlete.create({
     data: {
       name,
       birth_date: new Date(birthDate),
@@ -80,6 +80,37 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         create: {
           user_id: userId,
         },
+      },
+    },
+  })
+
+  await prisma.anamnesis.create({
+    data: {
+      athlete_id: athlete.id,
+
+      sections: {
+        create: [
+          {
+            title: 'Rotina e atividades atuais',
+            icon: 'LIST_TODO',
+
+            questions: {
+              create: [
+                {
+                  title:
+                    'Descreva como é a rotina atual do atleta (descrever um dia típico do começo ao fim, com as atividades de rotina em casa, outras atividades, retorno a casa, atividades realizadas em casa, período de sono, aulas ou curso realizados, etc)',
+                  question_type: 'ESSAY',
+                },
+
+                {
+                  title:
+                    'Descreva como está a vida do atleta no presente momento:',
+                  question_type: 'ESSAY',
+                },
+              ],
+            },
+          },
+        ],
       },
     },
   })
