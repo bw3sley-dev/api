@@ -64,7 +64,5 @@ export async function authenticate(
       sameSite: 'none',
       maxAge: 3600 * 24 * 7, // 7 dias
     })
-    .send({
-      token,
-    })
+    .send()
 }
