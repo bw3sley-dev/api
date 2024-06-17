@@ -6,9 +6,9 @@ export async function logout(_: FastifyRequest, reply: FastifyReply) {
   return reply
     .clearCookie('auth', {
       path: '/',
-      secure: env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'dev',
       httpOnly: true,
-      sameSite: true,
+      sameSite: 'none',
     })
     .send()
 }
