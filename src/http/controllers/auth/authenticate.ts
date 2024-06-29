@@ -6,8 +6,6 @@ import { z } from 'zod'
 
 import { compare } from 'bcryptjs'
 
-import { env } from '@/env'
-
 export async function authenticate(
   request: FastifyRequest,
   reply: FastifyReply,
@@ -59,7 +57,7 @@ export async function authenticate(
   return reply
     .setCookie('auth', token, {
       path: '/',
-      secure: env.NODE_ENV === 'dev',
+      secure: true,
       httpOnly: true,
       sameSite: 'none',
       maxAge: 3600 * 24 * 7, // 7 dias

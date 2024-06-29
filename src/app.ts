@@ -26,9 +26,7 @@ app.register(fastifyCors, {
   allowedHeaders: ['content-type'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
 
-  origin: (_, callback) => {
-    callback(null, true)
-  },
+  origin: true,
 })
 
 app.register(fastifyJwt, {
