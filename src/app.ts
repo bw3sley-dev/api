@@ -23,7 +23,7 @@ export const app = fastify()
 
 app.register(fastifyCors, {
   credentials: true,
-  allowedHeaders: ['content-type'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
 
   origin: true,

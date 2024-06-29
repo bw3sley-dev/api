@@ -12,6 +12,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     name: z.string(),
     cpf: z.string(),
     gender: z.enum(['MALE', 'FEMALE']).optional(),
+    phone: z.string().optional(),
     birthDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
       message: 'Formato da data inválido',
     }),
@@ -29,7 +30,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       .optional(),
   })
 
-  const { name, cpf, gender, birthDate, address } = updateSchema.parse(
+  const { name, cpf, gender, birthDate, address, phone } = updateSchema.parse(
     request.body,
   )
 
@@ -56,6 +57,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       name,
       cpf,
       gender,
+      phone,
       birth_date: birthDate && new Date(birthDate),
     },
   })

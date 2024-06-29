@@ -54,13 +54,7 @@ export async function authenticate(
     },
   )
 
-  return reply
-    .setCookie('auth', token, {
-      path: '/',
-      secure: true,
-      httpOnly: true,
-      sameSite: 'none',
-      maxAge: 3600 * 24 * 7, // 7 dias
-    })
-    .send()
+  return reply.send({
+    token,
+  })
 }
