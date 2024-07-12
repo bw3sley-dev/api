@@ -26,7 +26,6 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     ]),
     status: z.boolean().default(true),
     guardianName: z.string(),
-    guardianEmail: z.string().email().optional(),
   })
 
   const {
@@ -37,7 +36,6 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     bloodType,
     status,
     guardianName,
-    guardianEmail,
   } = createBodySchema.parse(request.body)
 
   const athlete = await prisma.athlete.create({
@@ -56,7 +54,6 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       guardian: {
         create: {
           name: guardianName,
-          email: guardianEmail,
         },
       },
 

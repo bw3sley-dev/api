@@ -12,28 +12,28 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
   const { id } = updateGuardianParamsSchema.parse(request.params)
 
   const updateGuardianBodySchema = z.object({
-    name: z.string().optional(),
-    gender: z.enum(['MALE', 'FEMALE']).optional(),
-    email: z.string().email().optional(),
-    cpf: z.string().optional(),
-    rg: z.string().optional(),
-    relationshipDegree: z.string().optional(),
+    name: z.string().nullable().optional(),
+    gender: z.enum(['MALE', 'FEMALE']).nullable().optional(),
+    email: z.string().email().nullable().optional(),
+    cpf: z.string().nullable().optional(),
+    rg: z.string().nullable().optional(),
+    relationshipDegree: z.string().nullable().optional(),
     address: z
       .object({
-        street: z.string().optional(),
-        city: z.string().optional(),
-        uf: z.string().optional(),
-        zipcode: z.string().optional(),
-        complement: z.string().optional(),
-        neighborhood: z.string().optional(),
-        number: z.string().optional(),
-        country: z.string().default('BRASIL').optional(),
+        street: z.string().nullable(),
+        city: z.string().nullable(),
+        uf: z.string().nullable(),
+        zipcode: z.string().nullable(),
+        complement: z.string().nullable(),
+        neighborhood: z.string().nullable(),
+        number: z.string().nullable(),
+        country: z.string().default('BRASIL').nullable(),
       })
+      .nullable()
       .optional(),
   })
 
-  const { name, gender, email, cpf, rg, relationshipDegree, address } =
-    updateGuardianBodySchema.parse(request.body)
+  const _updateGuardian = updateGuardianBodySchema.safeParse(request.body).data
 
   const guardian = await prisma.guardian.findUnique({
     where: {
@@ -53,29 +53,29 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     },
 
     data: {
-      name,
-      gender,
-      email,
-      cpf,
-      rg,
-      relationship_degree: relationshipDegree,
+      name: _updateGuardian?.name,
+      gender: _updateGuardian?.gender,
+      email: _updateGuardian?.email,
+      cpf: _updateGuardian?.cpf,
+      rg: _updateGuardian?.rg,
+      relationship_degree: _updateGuardian?.relationshipDegree,
     },
   })
 
-  if (address) {
+  if (_updateGuardian?.address) {
     if (guardian.id) {
       await prisma.address.update({
         where: { id: guardian.address_id! },
 
         data: {
-          street: address.street,
-          neighborhood: address.neighborhood,
-          zipcode: address.zipcode,
-          complement: address.complement,
-          number: address.number,
-          city: address.city,
-          uf: address.uf,
-          country: address.country,
+          street: _updateGuardian?.address.street,
+          neighborhood: _updateGuardian?.address.neighborhood,
+          zipcode: _updateGuardian?.address.zipcode,
+          complement: _updateGuardian?.address.complement,
+          number: _updateGuardian?.address.number,
+          city: _updateGuardian?.address.city,
+          uf: _updateGuardian?.address.uf,
+          country: _updateGuardian?.address.country,
         },
       })
 
@@ -84,14 +84,14 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     const newAddress = await prisma.address.create({
       data: {
-        street: address.street,
-        neighborhood: address.neighborhood,
-        zipcode: address.zipcode,
-        complement: address.complement,
-        number: address.number,
-        city: address.city,
-        uf: address.uf,
-        country: address.country,
+        street: _updateGuardian?.address.street,
+        neighborhood: _updateGuardian?.address.neighborhood,
+        zipcode: _updateGuardian?.address.zipcode,
+        complement: _updateGuardian?.address.complement,
+        number: _updateGuardian?.address.number,
+        city: _updateGuardian?.address.city,
+        uf: _updateGuardian?.address.uf,
+        country: _updateGuardian?.address.country,
       },
     })
 
