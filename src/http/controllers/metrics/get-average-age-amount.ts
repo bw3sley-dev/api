@@ -40,7 +40,7 @@ export async function getAverageAgeAmount(
     const amount = totalAge / athletes.length
 
     return reply.send({
-      amount,
+      amount: Number(amount.toFixed(2)),
     })
   }
 
