@@ -10,7 +10,7 @@ export async function search(request: FastifyRequest, reply: FastifyReply) {
   const searchQuerySchema = z.object({
     pageIndex: z.coerce.number().min(0),
     athleteName: z.string().optional(),
-    status: z.enum(['all', 'active', 'inactive']).default('all'),
+    status: z.enum(['all', 'active', 'inactive']).default('active'),
   })
 
   const PAGE_SIZE = 10
