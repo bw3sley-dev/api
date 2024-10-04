@@ -47,6 +47,10 @@ export async function search(request: FastifyRequest, reply: FastifyReply) {
       blood_type: true,
       status: true,
     },
+
+    orderBy: {
+      name: 'asc',
+    },
   })
 
   const athletesCount = await prisma.athlete.count({

@@ -7,6 +7,8 @@ import { z } from 'zod'
 
 import { transformNameToInitials } from '@/utils/transform-name-to-initials'
 
+import dayjs from 'dayjs'
+
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
   const profileParamsSchema = z.object({
     id: z.string().uuid(),
@@ -33,6 +35,8 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
     })
   }
 
+  const formattedBirthDate = dayjs(athlete.birth_date!).format('DD/MM/YYYY')
+
   const {
     address_id: _,
     guardian_id: __,
@@ -42,6 +46,8 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
 
   return reply.send({
     ..._athlete,
+
+    birth_date: formattedBirthDate,
 
     initials: transformNameToInitials(athlete.name),
   })

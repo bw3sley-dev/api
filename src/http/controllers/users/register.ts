@@ -30,23 +30,23 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, area, role, phone, password, orgId } =
     registerBodySchema.parse(request.body)
 
+  const organization = await prisma.organization.findUnique({
+    where: {
+      id: orgId,
+    },
+  })
+
+  if (!organization) {
+    return reply.status(404).send({
+      message: 'Organização não encontrada.',
+    })
+  }
+
   let hashedPassword
 
   if (password) {
     hashedPassword = await hash(password, 6)
   } else {
-    const organization = await prisma.organization.findUnique({
-      where: {
-        id: orgId,
-      },
-    })
-
-    if (!organization) {
-      return reply.status(404).send({
-        message: 'Organização não encontrada.',
-      })
-    }
-
     hashedPassword = organization?.default_password
 
     if (hashedPassword) {

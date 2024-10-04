@@ -6,7 +6,8 @@
     "dev": "tsx watch .",
     "lint": "npx eslint src --ext .ts --fix",
     "start": "node dist/server.js",
-    "build": "tsup src --out-dir dist"
+    "build": "tsup src --out-dir dist",
+    "seed": "tsx ./prisma/seed.ts"
   },
   "dependencies": {
     "@fastify/cookie": "9.3.1",
