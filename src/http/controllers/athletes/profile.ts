@@ -35,8 +35,6 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
     })
   }
 
-  // const formattedBirthDate = dayjs(athlete.birth_date!).format('DD/MM/YYYY')
-
   const {
     address_id: _,
     guardian_id: __,
@@ -46,8 +44,6 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
 
   return reply.send({
     ..._athlete,
-
-    // birth_date: formattedBirthDate,
 
     initials: transformNameToInitials(athlete.name),
   })
