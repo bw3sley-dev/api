@@ -25,8 +25,7 @@ export async function authenticate(
 
   if (!user) {
     return reply.status(404).send({
-      message:
-        'Usuário não encontrado, verifique as credenciais e tente novamente!',
+      message: 'Credenciais inválidas.',
     })
   }
 

@@ -9,9 +9,9 @@ async function main() {
     data: {
       name: 'T21 Arena Park',
       slug: 't21-arena-park',
-      domain: 't21arenapark.com',
+      domain: 'https://t21arenapark.com',
       should_attach_users_by_domain: false,
-      default_password: 'default_password123',
+      default_password: 'T21-ARENA-PARK',
       status: true,
       created_at: new Date(),
     },

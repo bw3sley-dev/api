@@ -210,16 +210,12 @@ model Section {
 }
 
 enum QuestionType {
-  ESSAY
-  MULTIPLE_CHOICE
-  TRUE_FALSE
-  SHORT_ANSWER
-  RATING
-  DATE
-  TIME
-  NUMBER
+  TEXTAREA
+  INPUT
+  CHECKBOX
+  SELECT
   MULTI_SELECT
-  DROPDOWN
+  RADIO
 }
 
 model Question {
